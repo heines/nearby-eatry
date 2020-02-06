@@ -68,10 +68,10 @@ export default {
     },
     getPlaces: function() {
       if(this.latitude) {
-        axios.get('/api_domain/maps/api/place/nearbysearch/json',
+        axios.get(process.env.VUE_APP_API_ENDPOINT,
           {
             params: {
-              key: `${process.env.VUE_APP_API_KEY}`,
+              key: process.env.VUE_APP_API_KEY,
               location: this.latitude + ',' + this.longitude,
               rankby: 'distance',
               language: 'ja',
