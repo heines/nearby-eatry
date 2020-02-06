@@ -1,4 +1,6 @@
 module.exports = {
+  publicPath: '/nearby-eatry/',
+  outputDir: 'docs',
   devServer: {
     https: true,
     host: "localhost",
