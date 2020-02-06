@@ -1,0 +1,43 @@
+<template lang="pug">
+  #app
+    #nav
+    transition(mode="out-in")
+      router-view
+</template>
+
+<style lang="scss">
+// @import url('https://fonts.googleapis.com/css?family=Noto+Sans+JP&display=swap');
+
+#app {
+  // font-family: 'Noto Sans JP', Helvetica, sans-serif;
+  font-family: serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2B2D42;
+  a {
+    color: #8D99AE;
+    text-decoration: none;
+    cursor: pointer;
+  }
+}
+
+#nav {
+  padding: 30px;
+
+  a {
+    font-weight: bold;
+    color: #cccccc;
+
+    &.router-link-exact-active {
+      color: #ffd700;
+    }
+  }
+}
+.v-enter-active, .v-leave-active {
+  transition: opacity .5s;
+}
+.v-enter, .v-leave-to {
+  opacity: 0;
+}
+</style>
