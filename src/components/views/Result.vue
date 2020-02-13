@@ -40,26 +40,23 @@ export default {
   components: {
     Loading
   },
-  created: function() {
-    this.getPosition();
-  },
   mounted: async function() {
-    await this.getPlaces();
+    await this.getPosition();
     await setTimeout(() => {
       this.initMap();
-    }, 3000);
+    }, 1000);
   },
   methods: {
     getPosition: function() {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
-          function(position){
+          (position) => {
             let coords = position.coords;
             // 緯度経度だけ取得
             this.latitude = coords.latitude;
             this.longitude = coords.longitude;
             this.getPlaces();
-          }.bind(this)
+          }
         )
       } else {
         // エラー処理を書く
@@ -68,14 +65,12 @@ export default {
     },
     getPlaces: function() {
       if(this.latitude) {
-        axios.get(process.env.VUE_APP_API_ENDPOINT,
+        axios.get('https://heiness.net/nearby-eatry/api',
           {
             params: {
               key: process.env.VUE_APP_API_KEY,
-              location: this.latitude + ',' + this.longitude,
-              rankby: 'distance',
-              language: 'ja',
-              type: 'restaurant',
+              lat: this.latitude,
+              lng: this.longitude,
             }
           }
         )
@@ -102,7 +97,6 @@ export default {
         lat: this.latitude,
         lng: this.longitude
       };
-
       // 地図の作成
       let mapLatLng = new google.maps.LatLng({
         lat: this.locations[0]['lat'],

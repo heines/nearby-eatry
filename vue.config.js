@@ -1,9 +1,9 @@
 module.exports = {
   publicPath: '/nearby-eatry/',
-  outputDir: 'docs',
   devServer: {
     https: true,
-    host: "localhost",
+    host: "0.0.0.0",
+    disableHostCheck: true,
     proxy: {
       "/api_domain": {
         target: "https://maps.googleapis.com",
