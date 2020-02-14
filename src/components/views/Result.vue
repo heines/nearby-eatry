@@ -32,9 +32,10 @@ export default {
       latitude: 35.6510666,
       longitude: 139.6887621,
       places: [],
-      locations: [],
+      locations: null,
       map: null,
       isShown: false,
+      isSuccess: true,
     }
   },
   components: {
@@ -42,26 +43,25 @@ export default {
   },
   mounted: async function() {
     await this.getPosition();
-    await setTimeout(() => {
+    if(this.isSuccess) {
+      await this.getPlaces();
       this.initMap();
-    }, 1000);
+    }
   },
   methods: {
     getPosition: function() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            let coords = position.coords;
-            // 緯度経度だけ取得
-            this.latitude = coords.latitude;
-            this.longitude = coords.longitude;
-            this.getPlaces();
-          }
-        )
-      } else {
-        // エラー処理を書く
-        console.log("error!");
-      }
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          let coords = position.coords;
+          // 緯度経度だけ取得
+          this.latitude = coords.latitude;
+          this.longitude = coords.longitude;
+        },
+        (error) => {
+          this.isSuccess = false;
+          console.log(error);
+        }
+      )
     },
     getPlaces: function() {
       if(this.latitude) {
