@@ -12,12 +12,12 @@
           )
           div
             #map
-          router-link(to="/") home
         div(
           v-show = "!isShown"
           key = "res-loading"
           )
           Loading
+    router-link(to="/") home
 </template>
 
 <script>
@@ -29,24 +29,19 @@ export default {
   data: function() {
     return {
       pos: '',
-      latitude: 35.6510666,
-      longitude: 139.6887621,
+      latitude: null,
+      longitude: null,
       places: [],
       locations: null,
       map: null,
       isShown: false,
-      isSuccess: true,
     }
   },
   components: {
     Loading
   },
-  mounted: async function() {
-    await this.getPosition();
-    if(this.isSuccess) {
-      await this.getPlaces();
-      this.initMap();
-    }
+  mounted: function() {
+    this.getPosition();
   },
   methods: {
     getPosition: function() {
@@ -56,12 +51,18 @@ export default {
           // 緯度経度だけ取得
           this.latitude = coords.latitude;
           this.longitude = coords.longitude;
+          this.getPositions();
         },
         (error) => {
-          this.isSuccess = false;
           console.log(error);
         }
       )
+    },
+    getPositions: async function() {
+      await this.getPlaces();
+      if(this.locations) {
+        this.initMap();
+      }
     },
     getPlaces: function() {
       if(this.latitude) {
