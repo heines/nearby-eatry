@@ -8,7 +8,10 @@
           router-link(
             to="/result"
             )
-            Loading
+            Loading(
+              width="100px"
+              :isAnime='false'
+              )
         //- .p-menu__contents-input
         //-   div 場所を入力する
         //-   input

@@ -1,10 +1,14 @@
 <template lang="pug">
   .p-result
     h1 Result Page.
-    div(v-if="address")
+    div(
+      v-if="address"
+      )
       h2 現在地
       p {{ address }}
-    div(v-if="isError")
+    div(
+      v-if="isError"
+      )
       |{{ isError }}
       br
       |{{ errorLog }}
@@ -20,7 +24,10 @@
           v-show = "!isShown"
           key = "res-loading"
           )
-          Loading
+          Loading(
+            width='150px'
+            :isAnime='true'
+            )
     router-link(to="/") home
 </template>
 
