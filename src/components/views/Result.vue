@@ -1,9 +1,13 @@
 <template lang="pug">
-  .p-result(v-if="latitude")
+  .p-result
     h1 Result Page.
-    div(v-if="latitude")
+    div(v-if="address")
       h2 現在地
-      p {{ latitude }},{{ longitude }}
+      p {{ address }}
+    div(v-if="isError")
+      |{{ isError }}
+      br
+      |{{ errorLog }}
     transition
       transition-group
         div(
@@ -35,6 +39,9 @@ export default {
       locations: null,
       map: null,
       isShown: false,
+      address: '',
+      isError: false,
+      errorLog: null,
     }
   },
   components: {
@@ -51,18 +58,42 @@ export default {
           // 緯度経度だけ取得
           this.latitude = coords.latitude;
           this.longitude = coords.longitude;
+          navigator.geolocation.getCurrentPosition(
+            () => {
+            	let latlng = {lat: parseFloat(this.latitude), lng: parseFloat(this.longitude)};
+            	let geocoder = new google.maps.Geocoder();
+            	geocoder.geocode({
+            		latLng: latlng
+            	}, (results, status) => {
+            		if (status == google.maps.GeocoderStatus.OK && results[0].geometry) {
+                  let length = results[0].address_components.length;
+                  let base = Array.from(results[0].address_components);
+                  base[length - 2] = ' ';
+                  let address_array = base.reverse();
+            			this.address = '〒' + address_array.map(x => x.short_name).join('');
+            		}
+            	});
+            },
+            (error) => {
+              this.isError = 1;
+              this.errorLog = error.code + ':' + error.message;
+            }
+          );
           this.getPositions();
         },
         (error) => {
-          console.log(error);
+          this.isError += 2;
+          if(!this.errorLog) {
+            this.errorLog = error.code + ':' + error.message;
+          }
         }
       )
     },
     getPositions: async function() {
       await this.getPlaces();
-      if(this.locations) {
+      setTimeout(() => {
         this.initMap();
-      }
+      }, 5000);
     },
     getPlaces: function() {
       if(this.latitude) {
@@ -85,7 +116,10 @@ export default {
           });
         })
         .catch(error => {
-          console.log(error);
+          this.isError += 3;
+          if(!this.errorLog) {
+            this.errorLog = JSON.stringify(error);
+          }
         })
       }
     },
@@ -119,9 +153,7 @@ export default {
           map: map
         });
       }
-      setTimeout(() => {
-        this.isShown = true;
-      }, 1000);
+      this.isShown = true;
     },
   }
 }
