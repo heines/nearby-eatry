@@ -6,29 +6,33 @@
       )
       h2 現在地
       p {{ address }}
-    div(
-      v-if="isError"
-      )
-      |{{ isError }}
-      br
-      |{{ errorLog }}
     transition
       transition-group
         div(
-          v-show = "isShown"
+          v-show = "isShown || isError > 0"
           key = "res-map"
           )
-          div
+          div(
+            v-if="isError"
+            )
+            |{{ isError }}
+            br
+            |{{ errorLog }}
+          div(
+            v-show = "isShown"
+            )
             #map
         div(
-          v-show = "!isShown"
+          v-show = "!isShown && !isError"
           key = "res-loading"
           )
           Loading(
             width='150px'
             :isAnime='true'
             )
-    router-link(to="/") home
+    router-link(
+      to = "/"
+      ) home
 </template>
 
 <script>
@@ -73,11 +77,21 @@ export default {
             		latLng: latlng
             	}, (results, status) => {
             		if (status == google.maps.GeocoderStatus.OK && results[0].geometry) {
+                  let regexp = new RegExp(/[0-9０-９]/);
                   let length = results[0].address_components.length;
                   let base = Array.from(results[0].address_components);
-                  base[length - 2] = ' ';
+                  base = base.map((x, index) => {
+                    if(index === length - 2) {
+                        return ' ';
+                    } else if(x.short_name && !(index === 0 || index === length - 1)) {
+                      let end_char = x.short_name.slice(-1);
+                      return regexp.test(end_char) ? `${x.short_name}-` : x.short_name;
+                    } else {
+                      return x.short_name;
+                    }
+                  });
                   let address_array = base.reverse();
-            			this.address = '〒' + address_array.map(x => x.short_name).join('');
+            			this.address = '〒' + address_array.join('');
             		}
             	});
             },
@@ -168,8 +182,12 @@ export default {
 
 <style lang="scss">
   #map {
-     width: 100%;
-     height: 400px;
-     background-color: grey;
-   }
+    width: 100%;
+    height: 400px;
+    background-color: grey;
+  }
+  a {
+    display: inline-block;
+    margin: 1em;
+  }
 </style>
