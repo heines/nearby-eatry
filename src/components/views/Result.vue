@@ -47,6 +47,8 @@ export default {
       latitude: null,
       longitude: null,
       places: [],
+      marker: [],
+      infoWindow: [],
       locations: null,
       map: null,
       isShown: false,
@@ -131,8 +133,12 @@ export default {
           this.places = response.data.results;
           this.locations = this.places.map(x => {
             return Object.assign(
-              { "name": x.name },
-              x.geometry.location
+              {
+                "name": x.name,
+                "rating": x.rating,
+                "vicinity": x.vicinity,
+              },
+              x.geometry.location,
             );
           });
         })
@@ -147,17 +153,15 @@ export default {
     initMap: function () {
       // 中心データ
       let zoom = 17;
-      let marker = [];
-      let infoWindow = [];
       let center = {
         lat: this.latitude,
         lng: this.longitude
       };
-      // 地図の作成
+      // 地図作成
       let mapLatLng = new google.maps.LatLng({
         lat: this.locations[0]['lat'],
         lng: this.locations[0]['lng']
-      }); // 緯度経度のデータ作成
+      });
       let map = new google.maps.Map(document.getElementById('map'), {
         center: mapLatLng,
         zoom  : zoom
@@ -168,15 +172,30 @@ export default {
         let markerLatLng = new google.maps.LatLng({
           lat: this.locations[i]['lat'],
           lng: this.locations[i]['lng']
-        }); // 緯度経度のデータ作成
-        marker[i] = new google.maps.Marker({
+        });
+        this.marker[i] = new google.maps.Marker({
           position: markerLatLng,
           map: map
         });
+        // クリック時の説明
+        this.infoWindow[i] = new google.maps.InfoWindow({
+          content: `
+          <div>
+            ${this.locations[i]['name']}
+            <br />
+            ${this.locations[i]['vicinity']}
+          </div>`
+        });
+        this.markerEvent(i);
       }
       this.isShown = true;
     },
-  }
+    markerEvent: function(i) {
+      this.marker[i].addListener('click', () => {
+        this.infoWindow[i].open(map, this.marker[i]);
+      });
+    }
+  },
 }
 </script>
 
