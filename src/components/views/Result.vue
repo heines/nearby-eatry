@@ -1,11 +1,6 @@
 <template lang="pug">
   .p-result
-    h1 Result Page.
-    div(
-      v-if="address"
-      )
-      h2 現在地
-      p {{ address }}
+    h1 検索結果一覧
     transition
       transition-group
         div(
@@ -30,6 +25,11 @@
             width='150px'
             :isAnime='true'
             )
+    div(
+      v-if="address"
+      )
+      h2 現在地
+      p {{ address }}
     router-link(
       to = "/"
       ) home
