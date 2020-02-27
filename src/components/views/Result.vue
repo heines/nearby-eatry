@@ -119,10 +119,10 @@ export default {
         this.initMap();
       }, 5000);
     },
-    getPlaces: function() {
+    getPlaces: async function() {
       let destinations = '';
       if(this.latitude) {
-        axios.get('https://heiness.net/nearby-eatry/api',
+        async axios.get('https://heiness.net/nearby-eatry/api',
           {
             params: {
               key: process.env.VUE_APP_API_KEY,
