@@ -122,7 +122,7 @@ export default {
     getPlaces: async function() {
       let destinations = '';
       if(this.latitude) {
-        async axios.get('https://heiness.net/nearby-eatry/api',
+        await axios.get('https://heiness.net/nearby-eatry/api',
           {
             params: {
               key: process.env.VUE_APP_API_KEY,
