@@ -38,6 +38,7 @@
 <script>
 import axios from 'axios';
 import Loading from '@/components/atoms/Loading.vue';
+const currentIcon = require('@/assets/current.png');
 
 export default {
   name: 'redult',
@@ -119,6 +120,7 @@ export default {
       }, 5000);
     },
     getPlaces: function() {
+      let destinations = '';
       if(this.latitude) {
         axios.get('https://heiness.net/nearby-eatry/api',
           {
@@ -147,6 +149,29 @@ export default {
           if(!this.errorLog) {
             this.errorLog = JSON.stringify(error);
           }
+        })
+        await (() => {
+          destinations = this.locations.map(x => 
+            `${x['lat']},${x['lng']}`
+          ).join('|');
+        })();
+        await axios.get('https://maps.googleapis.com/maps/api/distancematrix/json',
+          {
+            params: {
+              key: process.env.VUE_APP_API_KEY,
+              mode: 'walking',
+              origins: `${this.latitude},${this.longitude}`,
+              destinations: destinations
+            }
+          }
+        )
+        .then(res => {
+          let elements = Array.from(res.data.rows[0].elements);
+          let arrayLocations = this.locations.map((x, index) => {
+            x.distance = elements[index].distance.text;
+            x.duration = elements[index].duration.text;
+            return x;
+          })
         })
       }
     },
@@ -180,12 +205,31 @@ export default {
         // クリック時の説明
         this.infoWindow[i] = new google.maps.InfoWindow({
           content: `
-          <div>
-            ${this.locations[i]['name']}
-            <br />
-            ${this.locations[i]['vicinity']}
-          </div>`
+            <div class="v-balloon">
+              <span>${this.locations[i]['name']}</span>
+              <br />
+              ${this.locations[i]['vicinity']}
+              <br />
+              約 ${this.locations[i]['distance']}
+              /
+              約 ${this.locations[i]['duration']}
+              <br />
+              <a
+                href = "https://www.google.com/maps/dir/?api=1&destination=${this.locations[i]['lat']},${this.locations[i]['lng']}"
+                target = "_blank"
+              >経路をGoogle Mapで表示</a>
+            </div>
+          `
         });
+        // 現在地にマーカーを表示
+        let myLocation = new google.maps.Marker({
+          map: map,
+          position: center,
+          animation: google.maps.Animation.DROP,
+          icon: currentIcon,
+          title: '現在地'
+        });
+        
         this.markerEvent(i);
       }
       this.isShown = true;
@@ -208,5 +252,14 @@ export default {
   a {
     display: inline-block;
     margin: 1em;
+    &:hover {
+      color: #ffd817 !important;
+    }
+  }
+  .v-balloon {
+    text-align: left;
+    span {
+      font-weight: bold;
+    }
   }
 </style>
