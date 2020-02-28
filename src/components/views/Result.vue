@@ -122,7 +122,7 @@ export default {
     getPlaces: async function() {
       let destinations = '';
       if(this.latitude) {
-        await axios.get('https://heiness.net/nearby-eatry/api',
+        await axios.get('https://heiness.net/nearby-eatry/api/places',
           {
             params: {
               key: process.env.VUE_APP_API_KEY,
@@ -155,13 +155,13 @@ export default {
             `${x['lat']},${x['lng']}`
           ).join('|');
         })();
-        await axios.get('https://maps.googleapis.com/maps/api/distancematrix/json',
+        await axios.get('https://heiness.net/nearby-eatry/api/distancematrix',
           {
             params: {
               key: process.env.VUE_APP_API_KEY,
-              mode: 'walking',
-              origins: `${this.latitude},${this.longitude}`,
-              destinations: destinations
+              lat: this.latitude,
+              lng: this.longitude,
+              dst: destinations
             }
           }
         )
