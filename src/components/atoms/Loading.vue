@@ -5,7 +5,7 @@
     :width="width"
     :class="{ on: isAnime }"
     )
-    title loading
+    title {{ title }}
     g(
       id='all', data-name='icon')
       g#icon
@@ -28,6 +28,10 @@ export default {
     isAnime: {
       type: Boolean,
       default: false,
+    },
+    title: {
+      type: String,
+      default: '',
     }
   }
 }

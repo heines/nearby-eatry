@@ -1,37 +1,36 @@
 <template lang="pug">
   .p-home
-    .p-menu
-      .p-menu__title
-        h1 近場のごはん
-      .p-menu__contents
-        .p-menu__contents-icon
-          router-link(
-            to="/result"
-            )
-            Loading(
-              width="100px"
-              :isAnime='false'
-              )
-        //- .p-menu__contents-input
-        //-   div 場所を入力する
-        //-   input
-      router-link.p-menu__about(to="/about") About
+    Title(
+      text = '近場のごはん'
+      )
+    router-link(
+      to = "/result"
+      )
+      Loading(
+        width = "100px"
+        :isAnime = 'false'
+        title = "TAP!!"
+        )
+    router-link(
+      to = "/about"
+      ) About
 </template>
 
 <script>
-import Loading from '@/components/atoms/Loading.vue';
+import Title from '@/components/atoms/Title';
+import Loading from '@/components/atoms/Loading';
 export default {
   name: 'home',
   components: {
-    Loading
-  }
+    Loading,
+    Title,
+  },
 }
 </script>
 
 <style lang="scss">
   .p-menu {
     width: 80%;
-    height: 80vh;
     position: relative;
     margin-left: auto;
     margin-right: auto;

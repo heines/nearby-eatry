@@ -19,6 +19,7 @@
     color: #8D99AE;
     text-decoration: none;
     cursor: pointer;
+    display: block;
   }
 }
 
@@ -34,6 +35,7 @@
     }
   }
 }
+
 .v-enter-active, .v-leave-active {
   transition: opacity .5s;
 }

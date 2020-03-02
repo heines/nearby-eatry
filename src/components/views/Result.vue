@@ -24,6 +24,7 @@
           Loading(
             width='150px'
             :isAnime='true'
+            title = "WAIT A MINUTE!"
             )
     div(
       v-if="address"
