@@ -3,21 +3,36 @@
     Title(
       text = 'このサイトについて'
       )
-    h2 concept
-    p 何も考えたくないけど、近場で美味しいご飯が食べたい。
-      span 今すぐ
-    h2 How use
+    SubTitle(
+      text = 'concept'
+      )
+    Paragraph(
+      text = '何も考えたくないけど、近場で美味しいご飯が食べたい。今すぐ'
+      )
+    SubTitle(
+      text = 'How use'
+    )
     ol
-      li ボタンをクリック or タップすると、現在地の周辺の店舗にピンを立てる。
+      li ボタンをタップする
+      li 立てられたピンをタップして、情報を確認する
     router-link(to="/") Home
 </template>
 <script>
 import Title from '@/components/atoms/Title';
+import SubTitle from '@/components/atoms/SubTitle';
+import Paragraph from '@/components/atoms/Paragraph';
 export default {
   components: {
     Title,
+    SubTitle,
+    Paragraph,
   },
 }
 </script>
 <style>
+  ol {
+    margin: auto;
+    width: 80%;
+    text-align: left;
+  }
 </style>
