@@ -1,6 +1,8 @@
 <template lang="pug">
   .p-result
     h1 検索結果一覧
+    div テスト
+    div {{ inputs }}
     transition
       transition-group
         div(
@@ -57,6 +59,11 @@ export default {
       address: '',
       isError: false,
       errorLog: null,
+    }
+  },
+  props: {
+    inputs: {
+      type: String
     }
   },
   components: {

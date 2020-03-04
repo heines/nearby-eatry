@@ -3,14 +3,26 @@
     Title(
       text = '近場のごはん'
       )
-    router-link(
-      to = "/result"
-      )
-      Loading(
-        width = "100px"
-        :isAnime = 'false'
-        title = "TAP!!"
-        )
+    .p-lunch
+      .p-lunch__left
+        router-link(
+          to = "/result"
+          )
+          Loading(
+            width = "100px"
+            :isAnime = 'false'
+            title = "TAP!!"
+            :isInversion = 'true'
+            )
+      .p-lunch__right
+        Input(
+          v-model = "inputs"
+          )
+        router-link(
+          :disabled = "!inputs"
+          :event = "inputs ? 'click' : '' "
+          :to = "{ path: `/result/${inputs}` }"
+          ) 検索
     router-link(
       to = "/about"
       ) About
@@ -19,16 +31,47 @@
 <script>
 import Title from '@/components/atoms/Title';
 import Loading from '@/components/atoms/Loading';
+import Input from '@/components/atoms/Input';
 export default {
   name: 'home',
+  data() {
+    return {
+      inputs: '',
+    }
+  },
   components: {
     Loading,
     Title,
+    Input,
   },
 }
 </script>
 
 <style lang="scss">
+  .p-lunch{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin-top: 15px;
+    &__left, &__right {
+      width: 180px;
+      height: 120px;
+      margin-bottom: 15px;
+    }
+    &__left {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-sizing: border-box;
+      background: #ffd817;
+      border-radius: 3px;
+    }
+    &__right {
+      box-sizing: border-box;
+      border: 3px solid #ffd817;
+      border-radius: 3px;
+    }
+  }
   .p-menu {
     width: 80%;
     position: relative;

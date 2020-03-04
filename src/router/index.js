@@ -18,10 +18,15 @@ const routes = [
     component: About
   },
   {
+    path: '/result/:inputs',
+    name: 'address',
+    component: Result,
+    props: true,
+  },
+  {
     path: '/result',
     name: 'result',
     component: Result,
-    props: true,
   }
 ]
 
