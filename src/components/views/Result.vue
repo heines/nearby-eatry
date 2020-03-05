@@ -191,10 +191,7 @@ export default {
         lng: this.longitude
       };
       // 地図作成
-      let mapLatLng = new google.maps.LatLng({
-        lat: this.locations[0]['lat'],
-        lng: this.locations[0]['lng']
-      });
+      let mapLatLng = new google.maps.LatLng(center);
       let map = new google.maps.Map(document.getElementById('map'), {
         center: mapLatLng,
         zoom  : zoom
