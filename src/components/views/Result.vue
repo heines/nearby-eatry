@@ -196,6 +196,19 @@ export default {
         center: mapLatLng,
         zoom  : zoom
       });
+      
+      // ビジネス分野のピンを非表示
+      let styleOptions = [{
+        "featureType": "poi.business",
+        "stylers": [
+          {
+            "visibility": "off"
+          }
+        ]
+      }];
+      let lopanType = new google.maps.StyledMapType(styleOptions);
+      map.mapTypes.set('noText', lopanType);
+      map.setMapTypeId('noText');
 
       // マーカー毎の処理
       for (var i = 0; i < this.locations.length; i++) {
