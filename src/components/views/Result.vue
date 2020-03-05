@@ -81,31 +81,7 @@ export default {
           this.latitude = coords.latitude;
           this.longitude = coords.longitude;
           navigator.geolocation.getCurrentPosition(
-            () => {
-            	let latlng = {lat: parseFloat(this.latitude), lng: parseFloat(this.longitude)};
-            	let geocoder = new google.maps.Geocoder();
-            	geocoder.geocode({
-            		latLng: latlng
-            	}, (results, status) => {
-            		if (status == google.maps.GeocoderStatus.OK && results[0].geometry) {
-                  let regexp = new RegExp(/[0-9０-９]/);
-                  let length = results[0].address_components.length;
-                  let base = Array.from(results[0].address_components);
-                  base = base.map((x, index) => {
-                    if(index === length - 2) {
-                        return ' ';
-                    } else if(x.short_name && !(index === 0 || index === length - 1)) {
-                      let end_char = x.short_name.slice(-1);
-                      return regexp.test(end_char) ? `${x.short_name}-` : x.short_name;
-                    } else {
-                      return x.short_name;
-                    }
-                  });
-                  let address_array = base.reverse();
-            			this.address = '〒' + address_array.join('');
-            		}
-            	});
-            },
+            this.getCurrentPosition,
             (error) => {
               this.isError = 1;
               this.errorLog = error.code + ':' + error.message;
@@ -126,6 +102,31 @@ export default {
       setTimeout(() => {
         this.initMap();
       }, 5000);
+    },
+    getCurrentPosition: function() {
+      let latlng = {lat: parseFloat(this.latitude), lng: parseFloat(this.longitude)};
+      let geocoder = new google.maps.Geocoder();
+      geocoder.geocode({
+        latLng: latlng
+      }, (results, status) => {
+        if (status == google.maps.GeocoderStatus.OK && results[0].geometry) {
+          let regexp = new RegExp(/[0-9０-９]/);
+          let length = results[0].address_components.length;
+          let base = Array.from(results[0].address_components);
+          base = base.map((x, index) => {
+            if(index === length - 2) {
+                return ' ';
+            } else if(x.short_name && !(index === 0 || index === length - 1)) {
+              let end_char = x.short_name.slice(-1);
+              return regexp.test(end_char) ? `${x.short_name}-` : x.short_name;
+            } else {
+              return x.short_name;
+            }
+          });
+          let address_array = base.reverse();
+          this.address = '〒' + address_array.join('');
+        }
+      });
     },
     getPlaces: async function() {
       let destinations = '';
