@@ -1,8 +1,6 @@
 <template lang="pug">
   .p-result
     h1 検索結果一覧
-    div テスト
-    div {{ inputs }}
     transition
       transition-group
         div(
@@ -73,41 +71,49 @@ export default {
     this.getPosition();
   },
   methods: {
-    getPosition: function() {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          let coords = position.coords;
-          // 緯度経度だけ取得
-          this.latitude = coords.latitude;
-          this.longitude = coords.longitude;
-          navigator.geolocation.getCurrentPosition(
-            this.getCurrentPosition,
-            (error) => {
-              this.isError = 1;
+    getPosition: async function() {
+      if(this.inputs) {
+        // 入力から周辺情報を取得
+        this.getInputPosition();
+      } else {
+        // 現在地を取得
+        await navigator.geolocation.getCurrentPosition(
+          (position) => {
+            let coords = position.coords;
+            // 緯度経度だけ取得
+            this.latitude = coords.latitude;
+            this.longitude = coords.longitude;
+            // 現在地から周辺情報を取得
+            this.getCurrentPosition();
+          },
+          (error) => {
+            this.isError += 2;
+            if(!this.errorLog) {
               this.errorLog = error.code + ':' + error.message;
             }
-          );
-          this.getPositions();
-        },
-        (error) => {
-          this.isError += 2;
-          if(!this.errorLog) {
-            this.errorLog = error.code + ':' + error.message;
           }
-        }
-      )
+        );
+      }
     },
-    getPositions: async function() {
-      await this.getPlaces();
-      setTimeout(() => {
-        this.initMap();
-      }, 5000);
+    getInputPosition: function() {
+      let geocoder = new google.maps.Geocoder();
+      if(this.inputs) {
+        geocoder.geocode({
+          address: this.inputs
+        }, (results, status) => {
+          this.latitude = results[0].geometry.location.lat();
+          this.longitude = results[0].geometry.location.lng();
+          this.getCurrentPosition();
+        });
+      }
     },
     getCurrentPosition: function() {
-      let latlng = {lat: parseFloat(this.latitude), lng: parseFloat(this.longitude)};
       let geocoder = new google.maps.Geocoder();
       geocoder.geocode({
-        latLng: latlng
+        latLng: {
+          lat: parseFloat(this.latitude),
+          lng: parseFloat(this.longitude)
+        }
       }, (results, status) => {
         if (status == google.maps.GeocoderStatus.OK && results[0].geometry) {
           let regexp = new RegExp(/[0-9０-９]/);
@@ -125,6 +131,8 @@ export default {
           });
           let address_array = base.reverse();
           this.address = '〒' + address_array.join('');
+          
+          this.getPlaces();
         }
       });
     },
@@ -152,6 +160,9 @@ export default {
               x.geometry.location,
             );
           });
+          destinations = this.locations.map(x => 
+            `${x['lat']},${x['lng']}`
+          ).join('|');
         })
         .catch(error => {
           this.isError += 3;
@@ -159,11 +170,6 @@ export default {
             this.errorLog = JSON.stringify(error);
           }
         })
-        await (() => {
-          destinations = this.locations.map(x => 
-            `${x['lat']},${x['lng']}`
-          ).join('|');
-        })();
         await axios.get('https://heiness.net/nearby-eatry/api/distancematrix',
           {
             params: {
@@ -181,6 +187,7 @@ export default {
             x.duration = elements[index].duration.text;
             return x;
           })
+          this.initMap();
         })
       }
     },
