@@ -101,9 +101,14 @@ export default {
         geocoder.geocode({
           address: this.inputs
         }, (results, status) => {
-          this.latitude = results[0].geometry.location.lat();
-          this.longitude = results[0].geometry.location.lng();
-          this.getCurrentPosition();
+          if(results.length > 0) {
+            this.latitude = results[0].geometry.location.lat();
+            this.longitude = results[0].geometry.location.lng();
+            this.getCurrentPosition();
+          } else {
+            this.isError = true;
+            this.errorLog = "一致する住所がありませんでした。";
+          }
         });
       }
     },
