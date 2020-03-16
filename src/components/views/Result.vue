@@ -198,7 +198,6 @@ export default {
     },
     initMap: function () {
       // 中心データ
-      let zoom = 17;
       let center = {
         lat: this.latitude,
         lng: this.longitude
@@ -207,7 +206,6 @@ export default {
       let mapLatLng = new google.maps.LatLng(center);
       let map = new google.maps.Map(document.getElementById('map'), {
         center: mapLatLng,
-        zoom  : zoom
       });
       
       // ビジネス分野のピンを非表示
@@ -224,6 +222,7 @@ export default {
       map.setMapTypeId('noText');
 
       // マーカー毎の処理
+      let bounds = new google.maps.LatLngBounds();
       for (var i = 0; i < this.locations.length; i++) {
         let markerLatLng = new google.maps.LatLng({
           lat: this.locations[i]['lat'],
@@ -262,6 +261,8 @@ export default {
         });
         
         this.markerEvent(i);
+        bounds.extend(this.marker[i].position);
+        map.fitBounds(bounds);       
       }
       this.isShown = true;
     },

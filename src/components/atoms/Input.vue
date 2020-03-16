@@ -13,5 +13,10 @@ export default {
   }
 }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
+  input {
+    max-width: 100%;
+    border: 1px solid #CCC;
+    box-sizing: border-box;
+  }
 </style>

@@ -6,7 +6,14 @@
 </template>
 
 <style lang="scss">
-// @import url('https://fonts.googleapis.com/css?family=Noto+Sans+JP&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans+JP&display=swap');
+@import '@/assets/css/foundation/ress.scss';
+@import '@/assets/css/foundation/base.scss';
+@import '@/assets/css/foundation/variables.scss';
+
+body {
+  background: $base-color;
+}
 
 #app {
   // font-family: 'Noto Sans JP', Helvetica, sans-serif;

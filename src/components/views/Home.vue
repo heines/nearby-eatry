@@ -67,6 +67,7 @@ export default {
       border-radius: 3px;
     }
     &__right {
+      padding: 20px;
       box-sizing: border-box;
       border: 3px solid #ffd817;
       border-radius: 3px;
