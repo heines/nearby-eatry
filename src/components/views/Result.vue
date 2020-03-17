@@ -245,7 +245,7 @@ export default {
               約 ${this.locations[i]['duration']}
               <br />
               <a
-                href = "https://www.google.com/maps/dir/?api=1&destination=${this.locations[i]['lat']},${this.locations[i]['lng']}"
+                href = "https://www.google.com/maps/dir/?api=1&destination=${this.locations[i]['lat']},${this.locations[i]['lng']}&travelmode=walking"
                 target = "_blank"
               >経路をGoogle Mapで表示</a>
             </div>
