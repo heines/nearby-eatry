@@ -48,6 +48,7 @@ export default {
 </script>
 
 <style lang="scss">
+  @import '@/assets/css/foundation/variables.scss';
   .p-lunch{
     display: flex;
     flex-wrap: wrap;
@@ -63,13 +64,13 @@ export default {
       justify-content: center;
       align-items: center;
       box-sizing: border-box;
-      background: #ffd817;
+      background: $primary-color;
       border-radius: 3px;
     }
     &__right {
       padding: 20px;
       box-sizing: border-box;
-      border: 3px solid #ffd817;
+      border: 3px solid $primary-color;
       border-radius: 3px;
     }
   }

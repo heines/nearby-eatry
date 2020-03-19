@@ -276,6 +276,7 @@ export default {
 </script>
 
 <style lang="scss">
+  @import '@/assets/css/foundation/variables.scss';
   #map {
     width: 100%;
     height: 400px;
@@ -285,7 +286,7 @@ export default {
     display: inline-block;
     margin: 1em;
     &:hover {
-      color: #ffd817 !important;
+      color: $primary-color !important;
     }
   }
   .v-balloon {
